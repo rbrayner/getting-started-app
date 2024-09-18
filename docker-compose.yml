@@ -1,0 +1,18 @@
+services:
+  todoapp:
+    image: todoapp:${BUILD_NUMBER}
+    ports:
+      - 3000:3000
+    deploy:
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          memory: 500M
+    volumes:
+      - type: volume
+        source: todo-db
+        target: /etc/todos
+
+volumes:
+  todo-db:
