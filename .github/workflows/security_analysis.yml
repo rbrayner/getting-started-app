@@ -28,7 +28,7 @@ jobs:
       #     sarif_file: ${{ steps.scan.outputs.sarif }}
 
   grype-image:
-    name: Grype
+    name: Grype Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
