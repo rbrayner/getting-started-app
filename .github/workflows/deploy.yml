@@ -1,25 +1,14 @@
-name: build
+name: Security Analysis
 
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
-jobs:
-  Bearer:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
-      - name: Run Report
-        id: report
-        uses: bearer/bearer-action@v2
-      # - name: upload Bearer scan SARIF report
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: ${{ steps.report.outputs.sarif }}
-        
+jobs:   
   Anchore:
     runs-on: ubuntu-latest
     steps:
@@ -31,8 +20,17 @@ jobs:
         with:
           path: "."
           # fail-build: false
-          output-format: table
-      # - name: upload Anchore scan SARIF report
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: ${{ steps.scan.outputs.sarif }}
+          # output-format: table
+      - name: upload Anchore scan SARIF report
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+  
+  Bearer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Run Report
+        id: report
+        uses: bearer/bearer-action@v2
