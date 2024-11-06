@@ -9,7 +9,8 @@ on:
       - main
 
 jobs:   
-  Grype:
+  grype:
+    name: Grype
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -26,42 +27,22 @@ jobs:
       #   with:
       #     sarif_file: ${{ steps.scan.outputs.sarif }}
 
-  Grype-Image:
+  grype-image:
+    name: Grype
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
       - name: Build the Container image
-        run: |
-          pwd
-          ls -la
-          docker build . --file Dockerfile --tag localbuild/todo-app:v1
+        run: docker build . --file Dockerfile --tag localbuild/todo-app:v1
       - uses: anchore/scan-action@v3
         id: scan
         with:
           image: "localbuild/todo-app:v1"
           output-format: table
-      # - name: upload Anchore scan SARIF report
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: ${{ steps.scan.outputs.sarif }}
-
-  Clair:
-    name: Clair
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
-      - name: Build an image from Dockerfile
-        run: docker build -t localbuild/mytodo-app:${{ github.sha }} .
-      - name: Save Docker image
-        run: docker save -o ${{ github.sha }} localbuild/mytodo-app:${{ github.sha }}
-      - name: Run Clair V4
-        uses: quay/clair-action@main
-        with:
-          image-path: ${{ github.sha }}
   
-  Bearer:
+  bearer:
+    name: Bearer
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
