@@ -45,6 +45,21 @@ jobs:
       #   uses: github/codeql-action/upload-sarif@v3
       #   with:
       #     sarif_file: ${{ steps.scan.outputs.sarif }}
+
+  Clair:
+    name: Clair
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Build an image from Dockerfile
+        run: docker build -t localbuild/mytodo-app:${{ github.sha }} .
+      - name: Save Docker image
+        run: docker save -o ${{ github.sha }} localbuild/mytodo-app:${{ github.sha }}
+      - name: Run Clair V4
+        uses: quay/clair-action@main
+        with:
+          image-path: ${{ github.sha }}
   
   Bearer:
     runs-on: ubuntu-latest
