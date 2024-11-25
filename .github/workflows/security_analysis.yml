@@ -41,21 +41,26 @@ jobs:
           image: "localbuild/todo-app:v1"
           output-format: table
 
-  generate-sbom:
-    name: Generate SBOM
+  grype-sbom:
+    name: Grype SBOM
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-      - name: Download CycloneDX CLI
-        run: |
-          npm install --global @cyclonedx/cyclonedx-npm
-          npx @cyclonedx/cyclonedx-npm --output-file bom.json
+      - name: Install CycloneDX CLI
+        run: npm install --global @cyclonedx/cyclonedx-npm
+      - name: Generate SBOM file
+        run: npx @cyclonedx/cyclonedx-npm --output-file sbom.json
+      - name: Scan SBOM
+        uses: anchore/scan-action@v3
+        with:
+          sbom: "sbom.json"
+          output-format: table
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v3
         with:
           name: sbom
-          path: bom.json
+          path: sbom.json
 
   bearer:
     name: Bearer
