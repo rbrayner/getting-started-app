@@ -51,16 +51,16 @@ jobs:
         run: npm install --global @cyclonedx/cyclonedx-npm
       - name: Generate SBOM file
         run: npx @cyclonedx/cyclonedx-npm --output-file sbom.json
-      - name: Scan SBOM
-        uses: anchore/scan-action@v3
-        with:
-          sbom: "sbom.json"
-          output-format: table
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v3
         with:
           name: sbom
           path: sbom.json
+      - name: Scan SBOM
+        uses: anchore/scan-action@v3
+        with:
+          sbom: "sbom.json"
+          output-format: table
 
   bearer:
     name: Bearer
