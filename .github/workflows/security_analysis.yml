@@ -62,6 +62,20 @@ jobs:
           sbom: "sbom.json"
           output-format: table
 
+  grype-sbom-syft:
+      name: Grype SBOM
+      runs-on: ubuntu-latest
+      steps:
+        - name: Generate sbom
+          uses: anchore/sbom-action@v0
+          with:
+            artifact-name: sbom.spdx
+        - name: Scan SBOM
+          uses: anchore/scan-action@v3
+          with:
+            sbom: "sbom.spdx"
+            output-format: table
+    
   bearer:
     name: Bearer
     runs-on: ubuntu-latest
