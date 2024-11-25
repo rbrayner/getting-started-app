@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SBOM_FILE="bom.json"
+SBOM_FILE=$(mktemp)
 BASE64_FILE=$(mktemp)
 
 npx @cyclonedx/cyclonedx-npm --output-file ${SBOM_FILE}
@@ -13,7 +13,7 @@ cat <<EOF > ${PAYLOAD_FILE}
 }
 EOF
 
-rm -f ${BASE64_FILE}
+rm -f ${SBOM_FILE} ${BASE64_FILE}
 
 curl -X PUT \
     -H "Content-Type: application/json" \
